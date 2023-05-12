@@ -1,4 +1,5 @@
-import consolaGlobalInstance, { LogLevels, LogLevel } from 'consola'
+import consolaGlobalInstance from 'consola'
+import { LogLevels, LogLevel } from 'consola'
 
 export default consolaGlobalInstance
 consolaGlobalInstance.level = LogLevels.debug;
