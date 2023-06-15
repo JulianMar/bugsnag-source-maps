@@ -154,58 +154,11 @@ function uploadMultiple(_a) {
             logger.warn('No source maps found.');
             return;
         }
-        logger.debug(`Found ${sourceMaps.length} source map(s):`);
-        logger.debug(`  ${sourceMaps.join(', ')}`);
-        if (detectAppVersion) {
-            try {
-                appVersion = yield DetectAppVersion_1.default(projectRoot, logger);
-            }
-            catch (e) {
-                logger.error(e.message);
-                throw e;
-            }
-        }
-        let n = 0;
-        for (const sourceMap of sourceMaps) {
-            n++;
-            logger.info(`${n} of ${sourceMaps.length}`);
-            const [sourceMapContent, fullSourceMapPath] = yield ReadSourceMap_1.default(sourceMap, absoluteSearchPath, logger);
-            const sourceMapJson = ParseSourceMap_1.default(sourceMapContent, fullSourceMapPath, logger);
-            const bundlePath = sourceMap.replace(/\.map$/, '');
-            let bundleContent, fullBundlePath;
-            try {
-                [bundleContent, fullBundlePath] = yield ReadBundleContent_1.default(bundlePath, absoluteSearchPath, sourceMap, logger);
-            }
-            catch (e) {
-                // ignore error – it's already logged out
-            }
-            const transformedSourceMap = yield ApplyTransformations_1.default(fullSourceMapPath, sourceMapJson, projectRoot, logger);
-            logger.debug(`Initiating upload to "${url}"`);
-            const start = new Date().getTime();
-            try {
-                yield Request_1.default(url, {
-                    type: 2 /* Node */,
-                    apiKey,
-                    appVersion,
-                    codeBundleId,
-                    minifiedUrl: path_1.default.relative(projectRoot, path_1.default.resolve(absoluteSearchPath, bundlePath)).replace(/\\/g, '/'),
-                    minifiedFile: (bundleContent && fullBundlePath) ? new File_1.default(fullBundlePath, bundleContent) : undefined,
-                    sourceMap: new File_1.default(fullSourceMapPath, JSON.stringify(transformedSourceMap)),
-                    overwrite: overwrite
-                }, requestOpts, { idleTimeout });
-                const uploadedFiles = (bundleContent && fullBundlePath) ? `${sourceMap} and ${bundlePath}` : sourceMap;
-                logger.success(`Success, uploaded ${uploadedFiles} to ${url} in ${(new Date()).getTime() - start}ms`);
-            }
-            catch (e) {
-                if (e.cause) {
-                    logger.error(FormatErrorLog_1.default(e), e, e.cause);
-                }
-                else {
-                    logger.error(FormatErrorLog_1.default(e), e);
-                }
-                throw e;
-            }
-        }
+        const promises = sourceMaps.map((sourceMap) => __awaiter(this, void 0, void 0, function* () {
+            uploadOne({ apiKey, bundle: sourceMap.replace(/\.map$/, ''), sourceMap, appVersion, codeBundleId, overwrite, projectRoot, endpoint, detectAppVersion, requestOpts, logger, idleTimeout });
+        }));
+        yield Promise.all(promises);
+        return;
     });
 }
 exports.uploadMultiple = uploadMultiple;
