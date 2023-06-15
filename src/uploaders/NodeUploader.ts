@@ -197,60 +197,11 @@ export async function uploadMultiple ({
     return
   }
 
-  logger.debug(`Found ${sourceMaps.length} source map(s):`)
-  logger.debug(`  ${sourceMaps.join(', ')}`)
+  const promises = sourceMaps.map(async (sourceMap) => {
+    uploadOne({apiKey, bundle: sourceMap.replace(/\.map$/, ''), sourceMap, appVersion, codeBundleId, overwrite, projectRoot, endpoint, detectAppVersion, requestOpts, logger, idleTimeout})
+  })
 
-  if (detectAppVersion) {
-    try {
-      appVersion = await _detectAppVersion(projectRoot, logger)
-    } catch (e) {
-      logger.error(e.message)
-      throw e
-    }
-  }
+  await Promise.all(promises)
 
-  let n = 0
-  for (const sourceMap of sourceMaps) {
-    n++
-    logger.info(`${n} of ${sourceMaps.length}`)
-
-    const [ sourceMapContent, fullSourceMapPath ] = await readSourceMap(sourceMap, absoluteSearchPath, logger)
-    const sourceMapJson = parseSourceMap(sourceMapContent, fullSourceMapPath, logger)
-
-    const bundlePath = sourceMap.replace(/\.map$/, '')
-    let bundleContent, fullBundlePath
-    try {
-      [ bundleContent, fullBundlePath ] = await readBundleContent(bundlePath, absoluteSearchPath, sourceMap, logger)
-    } catch (e) {
-      // ignore error – it's already logged out
-    }
-
-    const transformedSourceMap = await applyTransformations(fullSourceMapPath, sourceMapJson, projectRoot, logger)
-
-    logger.debug(`Initiating upload to "${url}"`)
-    const start = new Date().getTime()
-    try {
-      await request(url, {
-        type: PayloadType.Node,
-        apiKey,
-        appVersion,
-        codeBundleId,
-        minifiedUrl: path.relative(projectRoot, path.resolve(absoluteSearchPath, bundlePath)).replace(/\\/g, '/'),
-        minifiedFile: (bundleContent && fullBundlePath) ? new File(fullBundlePath, bundleContent) : undefined,
-        sourceMap: new File(fullSourceMapPath, JSON.stringify(transformedSourceMap)),
-        overwrite: overwrite
-      }, requestOpts, { idleTimeout })
-
-      const uploadedFiles = (bundleContent && fullBundlePath) ? `${sourceMap} and ${bundlePath}` : sourceMap
-
-      logger.success(`Success, uploaded ${uploadedFiles} to ${url} in ${(new Date()).getTime() - start}ms`)
-    } catch (e) {
-      if (e.cause) {
-        logger.error(formatErrorLog(e), e, e.cause)
-      } else {
-        logger.error(formatErrorLog(e), e)
-      }
-      throw e
-    }
-  }
+  return;
 }
