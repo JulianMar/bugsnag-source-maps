@@ -1,8 +1,8 @@
-import readPkgUp from 'read-package-up'
+import { readPackageUp } from 'read-package-up'
 import { Logger } from '../../Logger'
 
 export default async function detectAppVersion (projectRoot: string, logger: Logger): Promise<string> {
-  const pkg = await readPkgUp({ cwd: projectRoot })
+  const pkg = await readPackageUp({ cwd: projectRoot })
   const version = pkg?.packageJson.version
 
   if (!version) {
