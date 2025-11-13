@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   testPathIgnorePatterns: ['dist/*'],
   clearMocks: true,
   collectCoverage: true,

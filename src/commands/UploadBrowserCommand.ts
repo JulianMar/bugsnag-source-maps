@@ -18,7 +18,7 @@ export default async function uploadBrowser (argv: string[], opts: Record<string
     if (opts.help) return browserUsage()
     if (browserOpts.quiet) logger.level = LogLevels.success
     validateBrowserOpts(browserOpts)
-  } catch (e) {
+  } catch (e: any) {
     process.exitCode = 1
     if (e.name === 'UNKNOWN_VALUE') {
       logger.error(`Invalid argument provided. ${e.message}`)
@@ -69,7 +69,7 @@ export default async function uploadBrowser (argv: string[], opts: Record<string
         logger
       })
     }
-  } catch (e) {
+  } catch {
     process.exitCode = 1
   }
 }

@@ -103,7 +103,7 @@ test('uploadOne(): failure (unexpected network error)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(1)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('misc upload error')
     expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('An unexpected error occurred.'), expect.any(Error), expect.any(Error))
@@ -122,7 +122,7 @@ test('uploadOne(): failure (source map not found)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(1)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toMatch(/ENOENT/)
     expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('The source map "not-found.js.map" could not be found'))
@@ -142,7 +142,7 @@ test('uploadOne(): failure (bundle not found)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(1)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toMatch(/ENOENT/)
     expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('The bundle "not-found.js" could not be found'))
@@ -160,7 +160,7 @@ test('uploadOne(): failure (sourcemap is invalid json)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(0)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Unexpected token h in JSON at position 0')
     expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('The source map was not valid JSON.'))
@@ -180,7 +180,7 @@ test('uploadOne(): fails when unable to detect appVersion', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).not.toHaveBeenCalled()
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Unable to automatically detect app version. Provide the "--app-version" argument or add a "version" key to your package.json file.')
     expect(mockLogger.error).toHaveBeenCalledWith('Unable to automatically detect app version. Provide the "--app-version" argument or add a "version" key to your package.json file.')
@@ -396,7 +396,7 @@ test('uploadOne(): custom endpoint (invalid URL)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(0)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Invalid URL: hljsdf')
     expect(mockLogger.error).toHaveBeenCalledWith(e)
@@ -753,7 +753,7 @@ test('uploadMultiple(): invalid source map', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).not.toHaveBeenCalled()
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Unexpected token h in JSON at position 0')
     expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('The source map was not valid JSON.'))
@@ -772,7 +772,7 @@ test('uploadMultiple(): fails when unable to detect appVersion', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).not.toHaveBeenCalled()
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Unable to automatically detect app version. Provide the "--app-version" argument or add a "version" key to your package.json file.')
     expect(mockLogger.error).toHaveBeenCalledWith('Unable to automatically detect app version. Provide the "--app-version" argument or add a "version" key to your package.json file.')

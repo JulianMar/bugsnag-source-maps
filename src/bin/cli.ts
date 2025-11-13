@@ -4,6 +4,7 @@ import logger from '../Logger'
 import uploadBrowser from '../commands/UploadBrowserCommand'
 import uploadReactNative from '../commands/UploadReactNativeCommand'
 import uploadNode from '../commands/UploadNodeCommand'
+import {version} from '../../package.json'
 
 const topLevelDefs = [
   {
@@ -29,8 +30,7 @@ export default async function run (argv: string[]): Promise<void> {
 
     if (opts.version) {
       return console.log(
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        `@bugsnag/source-maps v${require('../../package.json').version}`
+        `@bugsnag/source-maps v${version}`
       )
     }
 
@@ -56,7 +56,7 @@ export default async function run (argv: string[]): Promise<void> {
         }
         usage()
     }
-  } catch (e) {
+  } catch (e: any) {
     logger.error(`Invalid options. ${e.message}`)
     process.exitCode = 1
   }

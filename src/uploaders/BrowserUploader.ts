@@ -1,6 +1,6 @@
-import path from 'path'
-import http from 'http'
-import glob from 'glob'
+import path from 'node:path'
+import http from 'node:http'
+import {glob} from 'glob'
 
 import { Logger, noopLogger } from '../Logger'
 import File from '../File'
@@ -101,7 +101,7 @@ export async function uploadOne ({
   if (detectAppVersion) {
     try {
       appVersion = await _detectAppVersion(projectRoot, logger)
-    } catch (e) {
+    } catch (e: any) {
       logger.error(e.message)
       throw e
     }
@@ -124,7 +124,7 @@ export async function uploadOne ({
     const uploadedFiles = (bundleContent && fullBundlePath) ? `${sourceMap} and ${bundle}` : sourceMap
 
     logger.success(`Success, uploaded ${uploadedFiles} to ${url} in ${(new Date()).getTime() - start}ms`)
-  } catch (e) {
+  } catch (e: any) {
     if (e.cause) {
       logger.error(formatErrorLog(e), e, e.cause)
     } else {
@@ -199,12 +199,7 @@ export async function uploadMultiple ({
 
   logger.debug(`Searching for source maps "${directory}"`)
   const absoluteSearchPath = path.resolve(projectRoot, directory)
-  const sourceMaps: string[] = await new Promise((resolve, reject) => {
-    glob('**/*.map', { ignore: '**/*.css.map', cwd: absoluteSearchPath }, (err, files) => {
-      if (err) return reject(err)
-      resolve(files)
-    })
-  })
+  const sourceMaps: string[] = await glob('**/*.map', { ignore: '**/*.css.map', cwd: absoluteSearchPath })
 
   if (sourceMaps.length === 0) {
     logger.warn('No source maps found.')
@@ -217,7 +212,7 @@ export async function uploadMultiple ({
   if (detectAppVersion) {
     try {
       appVersion = await _detectAppVersion(projectRoot, logger)
-    } catch (e) {
+    } catch (e: any) {
       logger.error(e.message)
       throw e
     }
@@ -235,7 +230,7 @@ export async function uploadMultiple ({
     let bundleContent, fullBundlePath
     try {
       [ bundleContent, fullBundlePath ] = await readBundleContent(bundlePath, absoluteSearchPath, sourceMap, logger)
-    } catch (e) {
+    } catch {
       // bundle file is optional – ignore and carry on with the error logged out
     }
 
@@ -258,7 +253,7 @@ export async function uploadMultiple ({
       const uploadedFiles = (bundleContent && fullBundlePath) ? `${sourceMap} and ${bundlePath}` : sourceMap
 
       logger.success(`Success, uploaded ${uploadedFiles} to ${url} in ${(new Date()).getTime() - start}ms`)
-    } catch (e) {
+    } catch (e: any) {
       if (e.cause) {
         logger.error(formatErrorLog(e), e, e.cause)
       } else {

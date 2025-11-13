@@ -242,7 +242,7 @@ test('uploadOne(): failure (unexpected network error) with cause', async () => {
     })
 
     expect(mockedRequest).toHaveBeenCalledTimes(1)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('misc upload error')
     expect(mockLogger.error).toHaveBeenCalledWith(
@@ -275,7 +275,7 @@ test('uploadOne(): failure (unexpected network error) without cause', async () =
     })
 
     expect(mockedRequest).toHaveBeenCalledTimes(1)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('misc upload error')
     expect(mockLogger.error).toHaveBeenCalledWith(
@@ -303,7 +303,7 @@ test('uploadOne(): failure (source map not found)', async () => {
       projectRoot: path.join(__dirname, 'fixtures/react-native-ios'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toMatch(/ENOENT/)
     expect(mockLogger.error).toHaveBeenCalledWith(
@@ -357,7 +357,7 @@ test('uploadOne(): custom endpoint (invalid URL)', async () => {
       logger: mockLogger
     })
     expect(mockedRequest).toHaveBeenCalledTimes(0)
-  } catch (e) {
+  } catch (e: any) {
     expect(e).toBeTruthy()
     expect(e.message).toBe('Invalid URL: hljsdf')
     expect(mockLogger.error).toHaveBeenCalledWith(e)
@@ -715,7 +715,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get source map (generic Error)'
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedRequest).not.toHaveBeenCalled()
@@ -747,7 +747,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get source map (generic Network
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedRequest).not.toHaveBeenCalled()
@@ -781,7 +781,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get source map (connection refu
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedRequest).not.toHaveBeenCalled()
@@ -815,7 +815,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get source map (server error)',
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedRequest).not.toHaveBeenCalled()
@@ -849,7 +849,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get source map (timeout)', asyn
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedRequest).not.toHaveBeenCalled()
@@ -885,7 +885,7 @@ test('fethchAndUploadOne(): Fetch mode failure to get bundle (generic Error)', a
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(2)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedFetch).toHaveBeenNthCalledWith(2, 'http://react-native-bundler:1234/index.bundle?platform=android&dev=true', { idleTimeout: undefined })
@@ -922,7 +922,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get bundle (generic NetworkErro
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(2)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedFetch).toHaveBeenNthCalledWith(2, 'http://react-native-bundler:1234/index.bundle?platform=android&dev=true', { idleTimeout: undefined })
@@ -961,7 +961,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get bundle (connection refused)
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(2)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedFetch).toHaveBeenNthCalledWith(2, 'http://react-native-bundler:1234/index.bundle?platform=android&dev=true', { idleTimeout: undefined })
@@ -1000,7 +1000,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get bundle (server error)', asy
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(2)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedFetch).toHaveBeenNthCalledWith(2, 'http://react-native-bundler:1234/index.bundle?platform=android&dev=true', { idleTimeout: undefined })
@@ -1039,7 +1039,7 @@ test('fetchAndUploadOne(): Fetch mode failure to get bundle (timeout)', async ()
       projectRoot: path.join(__dirname, 'fixtures/react-native-android'),
       logger: mockLogger
     })
-  } catch (e) {
+  } catch {
     expect(mockedFetch).toHaveBeenCalledTimes(2)
     expect(mockedFetch).toHaveBeenNthCalledWith(1, 'http://react-native-bundler:1234/index.js.map?platform=android&dev=true', { idleTimeout: undefined })
     expect(mockedFetch).toHaveBeenNthCalledWith(2, 'http://react-native-bundler:1234/index.bundle?platform=android&dev=true', { idleTimeout: undefined })

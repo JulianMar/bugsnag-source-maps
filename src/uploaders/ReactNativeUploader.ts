@@ -118,7 +118,7 @@ export async function uploadOne ({
       overwrite
     }, requestOpts, { idleTimeout })
     logger.success(`Success, uploaded ${sourceMap} and ${bundle} to ${url} in ${(new Date()).getTime() - start}ms`)
-  } catch (e) {
+  } catch (e: any) {
     if (e.cause) {
       logger.error(formatErrorLog(e, true), e, e.cause)
     } else {
@@ -198,7 +198,7 @@ export async function fetchAndUploadOne ({
   try {
     logger.debug(`Fetching source map from ${sourceMapUrl}`)
     sourceMap = await fetch(sourceMapUrl, { idleTimeout })
-  } catch (e) {
+  } catch (e: any) {
     logger.error(
       formatFetchError(e, bundlerUrl, bundlerEntryPoint), e
     )
@@ -208,7 +208,7 @@ export async function fetchAndUploadOne ({
   try {
     logger.debug(`Fetching bundle from ${bundleUrl}`)
     bundle = await fetch(bundleUrl, { idleTimeout })
-  } catch (e) {
+  } catch (e: any) {
     logger.error(
       formatFetchError(e, bundlerUrl, bundlerEntryPoint), e
     )
@@ -236,7 +236,7 @@ export async function fetchAndUploadOne ({
       overwrite
     }, requestOpts, { idleTimeout })
     logger.success(`Success, uploaded ${entryPoint}.js.map to ${url} in ${(new Date()).getTime() - start}ms`)
-  } catch (e) {
+  } catch (e: any) {
     if (e.cause) {
       logger.error(formatErrorLog(e, true), e, e.cause)
     } else {

@@ -39,7 +39,7 @@ async function addSourcesContent (sourceMapPath: string, map: UnsafeSourceMap, p
           )
           source = await fs.readFile(absoluteSourcePath, 'utf-8')
         }
-      } catch (e) {
+      } catch {
         logger.warn(`No source found for "${p}" when searching relative to the source map "${sourceMapPath}"`)
       }
       sourcesContent.push(source)

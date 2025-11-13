@@ -1,4 +1,4 @@
-import readPkgUp from 'read-pkg-up'
+import readPkgUp from 'read-package-up'
 import { Logger } from '../../Logger'
 
 export default async function detectAppVersion (projectRoot: string, logger: Logger): Promise<string> {
