@@ -23,9 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadMultiple = exports.uploadOne = void 0;
+exports.uploadOne = uploadOne;
+exports.uploadMultiple = uploadMultiple;
 const path_1 = __importDefault(require("path"));
-const glob_1 = __importDefault(require("glob"));
+const glob_1 = require("glob");
 const Logger_1 = require("../Logger");
 const File_1 = __importDefault(require("../File"));
 const Request_1 = __importDefault(require("../Request"));
@@ -39,15 +40,15 @@ const InputValidators_1 = require("./lib/InputValidators");
 const EndpointUrl_1 = require("./lib/EndpointUrl");
 const UPLOAD_PATH = '/sourcemap';
 function validateOneOpts(opts, unknownArgs) {
-    InputValidators_1.validateRequiredStrings(opts, ['apiKey', 'sourceMap', 'projectRoot', 'endpoint']);
-    InputValidators_1.validateOptionalStrings(opts, ['bundle', 'appVersion', 'codeBundleId']);
-    InputValidators_1.validateBooleans(opts, ['overwrite', 'detectAppVersion']);
-    InputValidators_1.validateObjects(opts, ['requestOpts', 'logger']);
-    InputValidators_1.validateNoUnknownArgs(unknownArgs);
+    (0, InputValidators_1.validateRequiredStrings)(opts, ['apiKey', 'sourceMap', 'projectRoot', 'endpoint']);
+    (0, InputValidators_1.validateOptionalStrings)(opts, ['bundle', 'appVersion', 'codeBundleId']);
+    (0, InputValidators_1.validateBooleans)(opts, ['overwrite', 'detectAppVersion']);
+    (0, InputValidators_1.validateObjects)(opts, ['requestOpts', 'logger']);
+    (0, InputValidators_1.validateNoUnknownArgs)(unknownArgs);
 }
 function uploadOne(_a) {
-    var { apiKey, bundle, sourceMap, appVersion, codeBundleId, idleTimeout, overwrite = false, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, detectAppVersion = false, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "bundle", "sourceMap", "appVersion", "codeBundleId", "idleTimeout", "overwrite", "projectRoot", "endpoint", "detectAppVersion", "requestOpts", "logger"]);
     return __awaiter(this, void 0, void 0, function* () {
+        var { apiKey, bundle, sourceMap, appVersion, codeBundleId, idleTimeout, overwrite = false, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, detectAppVersion = false, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "bundle", "sourceMap", "appVersion", "codeBundleId", "idleTimeout", "overwrite", "projectRoot", "endpoint", "detectAppVersion", "requestOpts", "logger"]);
         validateOneOpts({
             apiKey,
             bundle,
@@ -64,19 +65,19 @@ function uploadOne(_a) {
         logger.info(`Preparing upload of node source map for "${bundle}"`);
         let url;
         try {
-            url = EndpointUrl_1.buildEndpointUrl(endpoint, UPLOAD_PATH);
+            url = (0, EndpointUrl_1.buildEndpointUrl)(endpoint, UPLOAD_PATH);
         }
         catch (e) {
             logger.error(e);
             throw e;
         }
-        const [sourceMapContent, fullSourceMapPath] = yield ReadSourceMap_1.default(sourceMap, projectRoot, logger);
-        const [bundleContent, fullBundlePath] = yield ReadBundleContent_1.default(bundle, projectRoot, sourceMap, logger);
-        const sourceMapJson = ParseSourceMap_1.default(sourceMapContent, sourceMap, logger);
-        const transformedSourceMap = yield ApplyTransformations_1.default(fullSourceMapPath, sourceMapJson, projectRoot, logger);
+        const [sourceMapContent, fullSourceMapPath] = yield (0, ReadSourceMap_1.default)(sourceMap, projectRoot, logger);
+        const [bundleContent, fullBundlePath] = yield (0, ReadBundleContent_1.default)(bundle, projectRoot, sourceMap, logger);
+        const sourceMapJson = (0, ParseSourceMap_1.default)(sourceMapContent, sourceMap, logger);
+        const transformedSourceMap = yield (0, ApplyTransformations_1.default)(fullSourceMapPath, sourceMapJson, projectRoot, logger);
         if (detectAppVersion) {
             try {
-                appVersion = yield DetectAppVersion_1.default(projectRoot, logger);
+                appVersion = yield (0, DetectAppVersion_1.default)(projectRoot, logger);
             }
             catch (e) {
                 logger.error(e.message);
@@ -86,8 +87,8 @@ function uploadOne(_a) {
         logger.debug(`Initiating upload to "${url}"`);
         const start = new Date().getTime();
         try {
-            yield Request_1.default(url, {
-                type: 2 /* Node */,
+            yield (0, Request_1.default)(url, {
+                type: 2 /* PayloadType.Node */,
                 apiKey,
                 appVersion,
                 codeBundleId,
@@ -100,44 +101,43 @@ function uploadOne(_a) {
         }
         catch (e) {
             if (e.cause) {
-                logger.error(FormatErrorLog_1.default(e), e, e.cause);
+                logger.error((0, FormatErrorLog_1.default)(e), e, e.cause);
             }
             else {
-                logger.error(FormatErrorLog_1.default(e), e);
+                logger.error((0, FormatErrorLog_1.default)(e), e);
             }
             throw e;
         }
     });
 }
-exports.uploadOne = uploadOne;
 function validateMultipleOpts(opts, unknownArgs) {
-    InputValidators_1.validateRequiredStrings(opts, ['apiKey', 'directory', 'projectRoot', 'endpoint']);
-    InputValidators_1.validateOptionalStrings(opts, ['appVersion', 'codeBundleId']);
-    InputValidators_1.validateBooleans(opts, ['overwrite', 'detectAppVersion']);
-    InputValidators_1.validateObjects(opts, ['requestOpts', 'logger']);
-    InputValidators_1.validateNoUnknownArgs(unknownArgs);
+    (0, InputValidators_1.validateRequiredStrings)(opts, ['apiKey', 'directory', 'projectRoot', 'endpoint']);
+    (0, InputValidators_1.validateOptionalStrings)(opts, ['appVersion', 'codeBundleId']);
+    (0, InputValidators_1.validateBooleans)(opts, ['overwrite', 'detectAppVersion']);
+    (0, InputValidators_1.validateObjects)(opts, ['requestOpts', 'logger']);
+    (0, InputValidators_1.validateNoUnknownArgs)(unknownArgs);
 }
 function upload(url, body, requestOpts, idleTimeout, logger, start, bundleContent, fullBundlePath, sourceMap, bundlePath) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield Request_1.default(url, body, requestOpts, { idleTimeout });
+            yield (0, Request_1.default)(url, body, requestOpts, { idleTimeout });
             const uploadedFiles = (bundleContent && fullBundlePath) ? `${sourceMap} and ${bundlePath}` : sourceMap;
             logger.success(`Success, uploaded ${uploadedFiles} to ${url} in ${(new Date()).getTime() - start}ms`);
         }
         catch (e) {
             if (e.cause) {
-                logger.error(FormatErrorLog_1.default(e), e, e.cause);
+                logger.error((0, FormatErrorLog_1.default)(e), e, e.cause);
             }
             else {
-                logger.error(FormatErrorLog_1.default(e), e);
+                logger.error((0, FormatErrorLog_1.default)(e), e);
             }
             throw e;
         }
     });
 }
 function uploadMultiple(_a) {
-    var { apiKey, directory, appVersion, codeBundleId, idleTimeout, overwrite = false, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, detectAppVersion = false, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "directory", "appVersion", "codeBundleId", "idleTimeout", "overwrite", "projectRoot", "endpoint", "detectAppVersion", "requestOpts", "logger"]);
     return __awaiter(this, void 0, void 0, function* () {
+        var { apiKey, directory, appVersion, codeBundleId, idleTimeout, overwrite = false, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, detectAppVersion = false, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "directory", "appVersion", "codeBundleId", "idleTimeout", "overwrite", "projectRoot", "endpoint", "detectAppVersion", "requestOpts", "logger"]);
         validateMultipleOpts({
             apiKey,
             directory,
@@ -153,7 +153,7 @@ function uploadMultiple(_a) {
         logger.info(`Preparing upload of node source maps for "${directory}"`);
         let url;
         try {
-            url = EndpointUrl_1.buildEndpointUrl(endpoint, UPLOAD_PATH);
+            url = (0, EndpointUrl_1.buildEndpointUrl)(endpoint, UPLOAD_PATH);
         }
         catch (e) {
             logger.error(e);
@@ -161,13 +161,7 @@ function uploadMultiple(_a) {
         }
         logger.debug(`Searching for source maps "${directory}"`);
         const absoluteSearchPath = path_1.default.resolve(projectRoot, directory);
-        const sourceMaps = yield new Promise((resolve, reject) => {
-            glob_1.default('**/*.map', { ignore: '**/node_modules/**', cwd: absoluteSearchPath }, (err, files) => {
-                if (err)
-                    return reject(err);
-                resolve(files);
-            });
-        });
+        const sourceMaps = yield (0, glob_1.glob)('**/*.map', { ignore: '**/node_modules/**', cwd: absoluteSearchPath });
         if (sourceMaps.length === 0) {
             logger.warn('No source maps found.');
             return;
@@ -176,7 +170,7 @@ function uploadMultiple(_a) {
         logger.debug(`  ${sourceMaps.join(', ')}`);
         if (detectAppVersion) {
             try {
-                appVersion = yield DetectAppVersion_1.default(projectRoot, logger);
+                appVersion = yield (0, DetectAppVersion_1.default)(projectRoot, logger);
             }
             catch (e) {
                 logger.error(e.message);
@@ -188,21 +182,21 @@ function uploadMultiple(_a) {
         for (const sourceMap of sourceMaps) {
             n++;
             logger.info(`${n} of ${sourceMaps.length}`);
-            const [sourceMapContent, fullSourceMapPath] = yield ReadSourceMap_1.default(sourceMap, absoluteSearchPath, logger);
-            const sourceMapJson = ParseSourceMap_1.default(sourceMapContent, fullSourceMapPath, logger);
+            const [sourceMapContent, fullSourceMapPath] = yield (0, ReadSourceMap_1.default)(sourceMap, absoluteSearchPath, logger);
+            const sourceMapJson = (0, ParseSourceMap_1.default)(sourceMapContent, fullSourceMapPath, logger);
             const bundlePath = sourceMap.replace(/\.map$/, '');
             let bundleContent, fullBundlePath;
             try {
-                [bundleContent, fullBundlePath] = yield ReadBundleContent_1.default(bundlePath, absoluteSearchPath, sourceMap, logger);
+                [bundleContent, fullBundlePath] = yield (0, ReadBundleContent_1.default)(bundlePath, absoluteSearchPath, sourceMap, logger);
             }
-            catch (e) {
+            catch (_b) {
                 // ignore error – it's already logged out
             }
-            const transformedSourceMap = yield ApplyTransformations_1.default(fullSourceMapPath, sourceMapJson, projectRoot, logger);
+            const transformedSourceMap = yield (0, ApplyTransformations_1.default)(fullSourceMapPath, sourceMapJson, projectRoot, logger);
             logger.debug(`Initiating upload to "${url}"`);
             const start = new Date().getTime();
             promises.push(upload(url, {
-                type: 2 /* Node */,
+                type: 2 /* PayloadType.Node */,
                 apiKey,
                 appVersion,
                 codeBundleId,
@@ -215,5 +209,4 @@ function uploadMultiple(_a) {
         yield Promise.all(promises);
     });
 }
-exports.uploadMultiple = uploadMultiple;
 //# sourceMappingURL=NodeUploader.js.map

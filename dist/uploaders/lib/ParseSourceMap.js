@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = parseSourceMap;
 function parseSourceMap(sourceMapContent, sourceMapPath, logger) {
     try {
         return JSON.parse(sourceMapContent);
@@ -9,5 +10,4 @@ function parseSourceMap(sourceMapContent, sourceMapPath, logger) {
         throw e;
     }
 }
-exports.default = parseSourceMap;
 //# sourceMappingURL=ParseSourceMap.js.map

@@ -8,14 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const read_pkg_up_1 = __importDefault(require("read-pkg-up"));
+exports.default = detectAppVersion;
+const read_package_up_1 = require("read-package-up");
 function detectAppVersion(projectRoot, logger) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pkg = yield read_pkg_up_1.default({ cwd: projectRoot });
+        const pkg = yield (0, read_package_up_1.readPackageUp)({ cwd: projectRoot });
         const version = pkg === null || pkg === void 0 ? void 0 : pkg.packageJson.version;
         if (!version) {
             throw new Error('Unable to automatically detect app version. Provide the "--app-version" argument or add a "version" key to your package.json file.');
@@ -24,5 +22,4 @@ function detectAppVersion(projectRoot, logger) {
         return version;
     });
 }
-exports.default = detectAppVersion;
 //# sourceMappingURL=DetectAppVersion.js.map

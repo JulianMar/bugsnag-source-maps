@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = run;
 const command_line_args_1 = __importDefault(require("command-line-args"));
 const command_line_usage_1 = __importDefault(require("command-line-usage"));
 const Logger_1 = __importDefault(require("../Logger"));
 const UploadBrowserCommand_1 = __importDefault(require("../commands/UploadBrowserCommand"));
 const UploadReactNativeCommand_1 = __importDefault(require("../commands/UploadReactNativeCommand"));
 const UploadNodeCommand_1 = __importDefault(require("../commands/UploadNodeCommand"));
+const package_json_1 = require("../../package.json");
 const topLevelDefs = [
     {
         name: 'command',
@@ -38,21 +40,19 @@ const topLevelDefs = [
 function run(argv) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const opts = command_line_args_1.default(topLevelDefs, { argv, stopAtFirstUnknown: true });
+            const opts = (0, command_line_args_1.default)(topLevelDefs, { argv, stopAtFirstUnknown: true });
             if (opts.version) {
-                return console.log(
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                `@bugsnag/source-maps v${require('../../package.json').version}`);
+                return console.log(`@bugsnag/source-maps v${package_json_1.version}`);
             }
             switch (opts.command) {
                 case 'upload-browser':
-                    yield UploadBrowserCommand_1.default(opts._unknown || [], opts);
+                    yield (0, UploadBrowserCommand_1.default)(opts._unknown || [], opts);
                     break;
                 case 'upload-node':
-                    yield UploadNodeCommand_1.default(opts._unknown || [], opts);
+                    yield (0, UploadNodeCommand_1.default)(opts._unknown || [], opts);
                     break;
                 case 'upload-react-native':
-                    yield UploadReactNativeCommand_1.default(opts._unknown || [], opts);
+                    yield (0, UploadReactNativeCommand_1.default)(opts._unknown || [], opts);
                     break;
                 default:
                     if (opts.help)
@@ -72,9 +72,8 @@ function run(argv) {
         }
     });
 }
-exports.default = run;
 function usage() {
-    console.log(command_line_usage_1.default([
+    console.log((0, command_line_usage_1.default)([
         { content: 'bugsnag-source-maps <command>' },
         { header: 'Available commands', content: 'upload-browser\nupload-node\nupload-react-native' },
         { header: 'Options', optionList: topLevelDefs, hide: ['command'] }

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = uploadReactNative;
 const command_line_args_1 = __importDefault(require("command-line-args"));
 const command_line_usage_1 = __importDefault(require("command-line-usage"));
 const Logger_1 = __importDefault(require("../Logger"));
@@ -31,7 +32,7 @@ function uploadReactNative(argv, opts) {
         ];
         let reactNativeOpts;
         try {
-            reactNativeOpts = command_line_args_1.default(defs, { argv, camelCase: true });
+            reactNativeOpts = (0, command_line_args_1.default)(defs, { argv, camelCase: true });
             if (reactNativeOpts.quiet) {
                 Logger_1.default.level = consola_1.LogLevels.success;
             }
@@ -50,7 +51,7 @@ function uploadReactNative(argv, opts) {
         try {
             const overwrite = reactNativeOpts.overwrite && !reactNativeOpts['noOverwrite'];
             if (reactNativeOpts.fetch) {
-                yield ReactNativeUploader_1.fetchAndUploadOne({
+                yield (0, ReactNativeUploader_1.fetchAndUploadOne)({
                     apiKey: reactNativeOpts.apiKey,
                     projectRoot: reactNativeOpts.projectRoot,
                     overwrite,
@@ -68,7 +69,7 @@ function uploadReactNative(argv, opts) {
                 });
             }
             else {
-                yield ReactNativeUploader_1.uploadOne({
+                yield (0, ReactNativeUploader_1.uploadOne)({
                     apiKey: reactNativeOpts.apiKey,
                     sourceMap: reactNativeOpts.sourceMap,
                     bundle: reactNativeOpts.bundle,
@@ -86,14 +87,13 @@ function uploadReactNative(argv, opts) {
                 });
             }
         }
-        catch (e) {
+        catch (_a) {
             process.exitCode = 1;
         }
     });
 }
-exports.default = uploadReactNative;
 function reactNativeUsage() {
-    console.log(command_line_usage_1.default([
+    console.log((0, command_line_usage_1.default)([
         { content: 'bugsnag-source-maps upload-react-native [...opts]' },
         {
             header: 'Options',

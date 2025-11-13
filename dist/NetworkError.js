@@ -12,7 +12,7 @@ var NetworkErrorCode;
     NetworkErrorCode[NetworkErrorCode["SERVER_ERROR"] = 6] = "SERVER_ERROR";
     NetworkErrorCode[NetworkErrorCode["CONNECTION_REFUSED"] = 7] = "CONNECTION_REFUSED";
     NetworkErrorCode[NetworkErrorCode["NOT_FOUND"] = 8] = "NOT_FOUND";
-})(NetworkErrorCode = exports.NetworkErrorCode || (exports.NetworkErrorCode = {}));
+})(NetworkErrorCode || (exports.NetworkErrorCode = NetworkErrorCode = {}));
 class NetworkError extends Error {
     constructor() {
         super(...arguments);

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = readSourceMap;
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
 const StringifyFileAccessError_1 = __importDefault(require("./StringifyFileAccessError"));
@@ -23,10 +24,9 @@ function readSourceMap(sourceMapPath, basePath, logger) {
             return [yield fs_1.promises.readFile(fullSourceMapPath, 'utf-8'), fullSourceMapPath];
         }
         catch (e) {
-            logger.error(`The source map "${sourceMapPath}" could not be found. ${StringifyFileAccessError_1.default(e)}\n\n  "${fullSourceMapPath}"`);
+            logger.error(`The source map "${sourceMapPath}" could not be found. ${(0, StringifyFileAccessError_1.default)(e)}\n\n  "${fullSourceMapPath}"`);
             throw e;
         }
     });
 }
-exports.default = readSourceMap;
 //# sourceMappingURL=ReadSourceMap.js.map

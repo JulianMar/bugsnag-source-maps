@@ -1,5 +1,4 @@
-/// <reference types="node" />
-import http from 'http';
+import http from 'node:http';
 import { Logger } from '../Logger';
 interface UploadSingleOpts {
     apiKey: string;

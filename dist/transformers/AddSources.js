@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = addSources;
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 function addSources(sourceMapPath, sourceMap, projectRoot, logger) {
@@ -32,10 +33,9 @@ function addSources(sourceMapPath, sourceMap, projectRoot, logger) {
         return maybeSourceMap;
     });
 }
-exports.default = addSources;
 function addSourcesContent(sourceMapPath, map, projectRoot, logger) {
-    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
         if (((_a = map.sources) === null || _a === void 0 ? void 0 : _a.length) === ((_b = map.sourcesContent) === null || _b === void 0 ? void 0 : _b.length)) {
             return map;
         }
@@ -51,7 +51,7 @@ function addSourcesContent(sourceMapPath, map, projectRoot, logger) {
                         source = yield fs_1.promises.readFile(absoluteSourcePath, 'utf-8');
                     }
                 }
-                catch (e) {
+                catch (_c) {
                     logger.warn(`No source found for "${p}" when searching relative to the source map "${sourceMapPath}"`);
                 }
                 sourcesContent.push(source);

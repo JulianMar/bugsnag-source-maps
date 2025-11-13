@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = readBundleContent;
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
 const StringifyFileAccessError_1 = __importDefault(require("./StringifyFileAccessError"));
@@ -23,10 +24,9 @@ function readBundleContent(bundlePath, basePath, sourceMapName, logger) {
             return [yield fs_1.promises.readFile(fullBundlePath, 'utf-8'), fullBundlePath];
         }
         catch (e) {
-            logger.error(`The bundle "${bundlePath}" could not be found. ${StringifyFileAccessError_1.default(e)}\n\n  "${fullBundlePath}"`);
+            logger.error(`The bundle "${bundlePath}" could not be found. ${(0, StringifyFileAccessError_1.default)(e)}\n\n  "${fullBundlePath}"`);
             throw e;
         }
     });
 }
-exports.default = readBundleContent;
 //# sourceMappingURL=ReadBundleContent.js.map

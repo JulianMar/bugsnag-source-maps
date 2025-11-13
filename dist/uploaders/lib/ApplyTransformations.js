@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = applyTransformations;
 const AddSources_1 = __importDefault(require("../../transformers/AddSources"));
 const StripProjectRoot_1 = __importDefault(require("../../transformers/StripProjectRoot"));
 function applyTransformations(fullSourceMapPath, sourceMapJson, projectRoot, logger) {
@@ -19,8 +20,8 @@ function applyTransformations(fullSourceMapPath, sourceMapJson, projectRoot, log
         logger.info('Applying transformations to source map');
         try {
             return yield Promise.resolve(sourceMapJson)
-                .then(json => AddSources_1.default(fullSourceMapPath, json, projectRoot, logger))
-                .then(json => StripProjectRoot_1.default(fullSourceMapPath, json, projectRoot, logger));
+                .then(json => (0, AddSources_1.default)(fullSourceMapPath, json, projectRoot, logger))
+                .then(json => (0, StripProjectRoot_1.default)(fullSourceMapPath, json, projectRoot, logger));
         }
         catch (e) {
             logger.error('Error applying transforms to source map', e);
@@ -28,5 +29,4 @@ function applyTransformations(fullSourceMapPath, sourceMapJson, projectRoot, log
         }
     });
 }
-exports.default = applyTransformations;
 //# sourceMappingURL=ApplyTransformations.js.map

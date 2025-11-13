@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -11,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -31,6 +45,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = uploadNode;
 const command_line_args_1 = __importDefault(require("command-line-args"));
 const command_line_usage_1 = __importDefault(require("command-line-usage"));
 const node = __importStar(require("../uploaders/NodeUploader"));
@@ -47,7 +62,7 @@ function uploadNode(argv, opts) {
         ];
         let nodeOpts;
         try {
-            nodeOpts = command_line_args_1.default(defs, { argv, camelCase: true });
+            nodeOpts = (0, command_line_args_1.default)(defs, { argv, camelCase: true });
             if (opts.help)
                 return nodeUsage();
             if (nodeOpts.quiet)
@@ -98,14 +113,13 @@ function uploadNode(argv, opts) {
                 });
             }
         }
-        catch (e) {
+        catch (_a) {
             process.exitCode = 1;
         }
     });
 }
-exports.default = uploadNode;
 function nodeUsage() {
-    console.log(command_line_usage_1.default([
+    console.log((0, command_line_usage_1.default)([
         { content: 'bugsnag-source-maps upload-node [...opts]' },
         {
             header: 'Options',

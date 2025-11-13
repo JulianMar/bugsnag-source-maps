@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = stringifyFileAccessError;
 function stringifyFileAccessError(e) {
     switch (e.code) {
         case 'ENOENT':
@@ -15,5 +16,4 @@ function stringifyFileAccessError(e) {
             return `Tried at the following location.`;
     }
 }
-exports.default = stringifyFileAccessError;
 //# sourceMappingURL=StringifyFileAccessError.js.map

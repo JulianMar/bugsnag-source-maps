@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import http from 'http';
 import File from './File';
 export declare const enum PayloadType {
@@ -6,9 +5,9 @@ export declare const enum PayloadType {
     ReactNative = 1,
     Node = 2
 }
-declare type Payload = BrowserPayload | ReactNativePayload | NodePayload;
-declare type BrowserPayload = JsPayload;
-declare type NodePayload = JsPayload;
+type Payload = BrowserPayload | ReactNativePayload | NodePayload;
+type BrowserPayload = JsPayload;
+type NodePayload = JsPayload;
 interface JsPayload {
     type: PayloadType.Node | PayloadType.Browser;
     apiKey: string;

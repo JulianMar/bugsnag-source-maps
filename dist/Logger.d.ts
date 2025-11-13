@@ -1,7 +1,7 @@
 import consolaGlobalInstance from 'consola';
 import { LogLevel } from 'consola';
 export default consolaGlobalInstance;
-export declare type Logger = {
+export type Logger = {
     trace: (...args: unknown[]) => void;
     debug: (...args: unknown[]) => void;
     info: (...args: unknown[]) => void;

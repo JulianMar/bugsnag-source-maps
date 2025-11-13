@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -11,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -42,7 +56,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchAndUploadOne = exports.uploadOne = void 0;
+exports.uploadOne = uploadOne;
+exports.fetchAndUploadOne = fetchAndUploadOne;
 const path_1 = __importDefault(require("path"));
 const querystring_1 = __importDefault(require("querystring"));
 const Logger_1 = require("../Logger");
@@ -58,15 +73,15 @@ const InputValidators_1 = require("./lib/InputValidators");
 const EndpointUrl_1 = require("./lib/EndpointUrl");
 const UPLOAD_PATH = '/react-native-source-map';
 function validateOneOpts(opts, unknownArgs) {
-    InputValidators_1.validateRequiredStrings(opts, ['apiKey', 'sourceMap', 'projectRoot', 'endpoint', 'platform']);
-    InputValidators_1.validateOptionalStrings(opts, ['bundle', 'appVersion', 'codeBundleId', 'appVersionCode', 'appBundleVersion']);
-    InputValidators_1.validateBooleans(opts, ['overwrite', 'dev']);
-    InputValidators_1.validateObjects(opts, ['requestOpts', 'logger']);
-    InputValidators_1.validateNoUnknownArgs(unknownArgs);
+    (0, InputValidators_1.validateRequiredStrings)(opts, ['apiKey', 'sourceMap', 'projectRoot', 'endpoint', 'platform']);
+    (0, InputValidators_1.validateOptionalStrings)(opts, ['bundle', 'appVersion', 'codeBundleId', 'appVersionCode', 'appBundleVersion']);
+    (0, InputValidators_1.validateBooleans)(opts, ['overwrite', 'dev']);
+    (0, InputValidators_1.validateObjects)(opts, ['requestOpts', 'logger']);
+    (0, InputValidators_1.validateNoUnknownArgs)(unknownArgs);
 }
 function uploadOne(_a) {
-    var { apiKey, sourceMap, bundle, platform, dev = false, appVersion, codeBundleId, appVersionCode, appBundleVersion, idleTimeout, overwrite = true, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "sourceMap", "bundle", "platform", "dev", "appVersion", "codeBundleId", "appVersionCode", "appBundleVersion", "idleTimeout", "overwrite", "projectRoot", "endpoint", "requestOpts", "logger"]);
     return __awaiter(this, void 0, void 0, function* () {
+        var { apiKey, sourceMap, bundle, platform, dev = false, appVersion, codeBundleId, appVersionCode, appBundleVersion, idleTimeout, overwrite = true, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, requestOpts = {}, logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "sourceMap", "bundle", "platform", "dev", "appVersion", "codeBundleId", "appVersionCode", "appBundleVersion", "idleTimeout", "overwrite", "projectRoot", "endpoint", "requestOpts", "logger"]);
         validateOneOpts({
             apiKey,
             sourceMap,
@@ -86,46 +101,45 @@ function uploadOne(_a) {
         logger.info(`Preparing upload of React Native source map (${dev ? 'dev' : 'release'} / ${platform})`);
         let url;
         try {
-            url = EndpointUrl_1.buildEndpointUrl(endpoint, UPLOAD_PATH);
+            url = (0, EndpointUrl_1.buildEndpointUrl)(endpoint, UPLOAD_PATH);
         }
         catch (e) {
             logger.error(e);
             throw e;
         }
-        const [sourceMapContent, fullSourceMapPath] = yield ReadSourceMap_1.default(sourceMap, projectRoot, logger);
-        const [bundleContent, fullBundlePath] = yield ReadBundleContent_1.default(bundle, projectRoot, sourceMap, logger);
-        const sourceMapJson = ParseSourceMap_1.default(sourceMapContent, sourceMap, logger);
-        const transformedSourceMap = yield ApplyTransformations_1.default(fullSourceMapPath, sourceMapJson, projectRoot, logger);
+        const [sourceMapContent, fullSourceMapPath] = yield (0, ReadSourceMap_1.default)(sourceMap, projectRoot, logger);
+        const [bundleContent, fullBundlePath] = yield (0, ReadBundleContent_1.default)(bundle, projectRoot, sourceMap, logger);
+        const sourceMapJson = (0, ParseSourceMap_1.default)(sourceMapContent, sourceMap, logger);
+        const transformedSourceMap = yield (0, ApplyTransformations_1.default)(fullSourceMapPath, sourceMapJson, projectRoot, logger);
         const marshalledVersions = marshallVersionOptions({ appVersion, codeBundleId, appBundleVersion, appVersionCode }, platform);
         logger.debug(`Initiating upload to "${url}"`);
         const start = new Date().getTime();
         try {
-            yield Request_1.default(url, Object.assign(Object.assign({ type: 1 /* ReactNative */, apiKey, sourceMap: new File_1.default(fullSourceMapPath, JSON.stringify(transformedSourceMap)), bundle: new File_1.default(fullBundlePath, bundleContent), platform,
+            yield (0, Request_1.default)(url, Object.assign(Object.assign({ type: 1 /* PayloadType.ReactNative */, apiKey, sourceMap: new File_1.default(fullSourceMapPath, JSON.stringify(transformedSourceMap)), bundle: new File_1.default(fullBundlePath, bundleContent), platform,
                 dev }, marshalledVersions), { overwrite }), requestOpts, { idleTimeout });
             logger.success(`Success, uploaded ${sourceMap} and ${bundle} to ${url} in ${(new Date()).getTime() - start}ms`);
         }
         catch (e) {
             if (e.cause) {
-                logger.error(FormatErrorLog_1.default(e, true), e, e.cause);
+                logger.error((0, FormatErrorLog_1.default)(e, true), e, e.cause);
             }
             else {
-                logger.error(FormatErrorLog_1.default(e, true), e);
+                logger.error((0, FormatErrorLog_1.default)(e, true), e);
             }
             throw e;
         }
     });
 }
-exports.uploadOne = uploadOne;
 function validateFetchOpts(opts, unknownArgs) {
-    InputValidators_1.validateRequiredStrings(opts, ['apiKey', 'projectRoot', 'endpoint', 'platform', 'bundlerUrl', 'bundlerEntryPoint']);
-    InputValidators_1.validateOptionalStrings(opts, ['bundle', 'appVersion', 'codeBundleId', 'appVersionCode', 'appBundleVersion']);
-    InputValidators_1.validateBooleans(opts, ['overwrite', 'dev']);
-    InputValidators_1.validateObjects(opts, ['requestOpts', 'logger']);
-    InputValidators_1.validateNoUnknownArgs(unknownArgs);
+    (0, InputValidators_1.validateRequiredStrings)(opts, ['apiKey', 'projectRoot', 'endpoint', 'platform', 'bundlerUrl', 'bundlerEntryPoint']);
+    (0, InputValidators_1.validateOptionalStrings)(opts, ['bundle', 'appVersion', 'codeBundleId', 'appVersionCode', 'appBundleVersion']);
+    (0, InputValidators_1.validateBooleans)(opts, ['overwrite', 'dev']);
+    (0, InputValidators_1.validateObjects)(opts, ['requestOpts', 'logger']);
+    (0, InputValidators_1.validateNoUnknownArgs)(unknownArgs);
 }
 function fetchAndUploadOne(_a) {
-    var { apiKey, platform, dev = false, appVersion, codeBundleId, appVersionCode, appBundleVersion, idleTimeout, overwrite = true, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, requestOpts = {}, bundlerUrl = 'http://localhost:8081', bundlerEntryPoint = 'index.js', logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "platform", "dev", "appVersion", "codeBundleId", "appVersionCode", "appBundleVersion", "idleTimeout", "overwrite", "projectRoot", "endpoint", "requestOpts", "bundlerUrl", "bundlerEntryPoint", "logger"]);
     return __awaiter(this, void 0, void 0, function* () {
+        var { apiKey, platform, dev = false, appVersion, codeBundleId, appVersionCode, appBundleVersion, idleTimeout, overwrite = true, projectRoot = process.cwd(), endpoint = EndpointUrl_1.DEFAULT_UPLOAD_ORIGIN, requestOpts = {}, bundlerUrl = 'http://localhost:8081', bundlerEntryPoint = 'index.js', logger = Logger_1.noopLogger } = _a, unknownArgs = __rest(_a, ["apiKey", "platform", "dev", "appVersion", "codeBundleId", "appVersionCode", "appBundleVersion", "idleTimeout", "overwrite", "projectRoot", "endpoint", "requestOpts", "bundlerUrl", "bundlerEntryPoint", "logger"]);
         validateFetchOpts({
             apiKey,
             platform,
@@ -145,7 +159,7 @@ function fetchAndUploadOne(_a) {
         logger.info(`Fetching React Native source map (${dev ? 'dev' : 'release'} / ${platform})`);
         let url;
         try {
-            url = EndpointUrl_1.buildEndpointUrl(endpoint, UPLOAD_PATH);
+            url = (0, EndpointUrl_1.buildEndpointUrl)(endpoint, UPLOAD_PATH);
         }
         catch (e) {
             logger.error(e);
@@ -159,7 +173,7 @@ function fetchAndUploadOne(_a) {
         let bundle;
         try {
             logger.debug(`Fetching source map from ${sourceMapUrl}`);
-            sourceMap = yield Request_1.fetch(sourceMapUrl, { idleTimeout });
+            sourceMap = yield (0, Request_1.fetch)(sourceMapUrl, { idleTimeout });
         }
         catch (e) {
             logger.error(formatFetchError(e, bundlerUrl, bundlerEntryPoint), e);
@@ -167,35 +181,34 @@ function fetchAndUploadOne(_a) {
         }
         try {
             logger.debug(`Fetching bundle from ${bundleUrl}`);
-            bundle = yield Request_1.fetch(bundleUrl, { idleTimeout });
+            bundle = yield (0, Request_1.fetch)(bundleUrl, { idleTimeout });
         }
         catch (e) {
             logger.error(formatFetchError(e, bundlerUrl, bundlerEntryPoint), e);
             throw e;
         }
         const sourceMapPath = path_1.default.resolve(projectRoot, bundlerEntryPoint);
-        const sourceMapJson = ParseSourceMap_1.default(sourceMap, sourceMapPath, logger);
-        const transformedSourceMap = yield ApplyTransformations_1.default(sourceMapPath, sourceMapJson, projectRoot, logger);
+        const sourceMapJson = (0, ParseSourceMap_1.default)(sourceMap, sourceMapPath, logger);
+        const transformedSourceMap = yield (0, ApplyTransformations_1.default)(sourceMapPath, sourceMapJson, projectRoot, logger);
         const marshalledVersions = marshallVersionOptions({ appVersion, codeBundleId, appBundleVersion, appVersionCode }, platform);
         logger.debug(`Initiating upload to "${url}"`);
         const start = new Date().getTime();
         try {
-            yield Request_1.default(url, Object.assign(Object.assign({ type: 1 /* ReactNative */, apiKey, sourceMap: new File_1.default(sourceMapUrl, JSON.stringify(transformedSourceMap)), bundle: new File_1.default(bundleUrl, bundle), platform,
+            yield (0, Request_1.default)(url, Object.assign(Object.assign({ type: 1 /* PayloadType.ReactNative */, apiKey, sourceMap: new File_1.default(sourceMapUrl, JSON.stringify(transformedSourceMap)), bundle: new File_1.default(bundleUrl, bundle), platform,
                 dev }, marshalledVersions), { overwrite }), requestOpts, { idleTimeout });
             logger.success(`Success, uploaded ${entryPoint}.js.map to ${url} in ${(new Date()).getTime() - start}ms`);
         }
         catch (e) {
             if (e.cause) {
-                logger.error(FormatErrorLog_1.default(e, true), e, e.cause);
+                logger.error((0, FormatErrorLog_1.default)(e, true), e, e.cause);
             }
             else {
-                logger.error(FormatErrorLog_1.default(e, true), e);
+                logger.error((0, FormatErrorLog_1.default)(e, true), e);
             }
             throw e;
         }
     });
 }
-exports.fetchAndUploadOne = fetchAndUploadOne;
 function marshallVersionOptions({ appVersion, codeBundleId, appVersionCode, appBundleVersion }, platform) {
     if (codeBundleId)
         return { codeBundleId };
